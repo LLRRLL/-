@@ -1,0 +1,323 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<iostream>
+#include<iomanip>
+#include<string.h>
+#include<ctype.h>
+#include<math.h>
+enum types { DELIMITER = 1, NUMBER };
+using  namespace std;
+class content
+{
+public:
+	void display();
+};
+void content::display()
+{
+	cout << "==============================================================\n";
+	cout << "====================这是一个计算器程序========================\n";
+	cout << "==============================================================\n\n";
+	cout << "* 说明：可以进行+ - * / % ^ 操作您还可以用括号输入您的表达式 *\n\n";
+	cout << "* 您输入表达式不需要输=号  例：您可输入6+7*5//7+4 然后回车 *\n\n";
+	cout << "==============================================================\n";
+	cout << "================输入exit回车，结束程序运行=================\n\n";
+	cout << "    ***** 1 基本计算器 **** 2 进制转换 3 三角函数 *****    \n\n";
+}
+class sanjiao
+{
+public:
+	double date4;
+	sanjiao(double pp);
+	void Get3();
+	void Get4();
+};
+class calculator
+{
+public:
+	char *str2;
+	char date[79];
+	char type;
+	calculator();
+	void getdate();
+	double show(char *s);
+	void error(int c);
+	void atom(double &rezult);
+	void count1(double &rezult);
+	void count2(double &rezult);
+	void count3(double &rezult);
+};
+class thansform
+{
+public:
+	int date1;
+	thansform(int p);
+	void Gets();
+};
+class thansform1
+{
+public:
+	char *date2;
+	thansform1(char *p);
+	void Get1();
+};
+void sanjiao::Get3()
+{
+	cout << sin(date4);
+}
+void sanjiao::Get4()
+{
+	cout << cos(date4);
+}
+sanjiao::sanjiao(double pp)
+{
+	date4 = pp;
+}
+thansform::thansform(int p)
+{
+	date1 = p;
+}
+thansform1::thansform1(char *p)
+{
+	date2 = p;
+}
+void thansform1::Get1()
+{
+	double h, m = 0, s;
+	h = strlen(date2);
+	s = h - 1;
+	for (int i = 0; i < h; i++)
+	{
+		m = m + (date2[i] - '0')*pow(2.0, s);
+		s--;
+	}
+	cout << m;
+}
+void thansform::Gets()
+{
+	int flag = 0, count = 0, s[100];
+	for (; date1 != 0;)
+	{
+		int i;
+		i = date1 % 2;
+		s[count] = i;
+		count++;
+		date1 = date1 / 2;
+	}
+	for (; count - 1 >= 0;)
+	{
+		cout << s[count - 1];
+		count--;
+	}
+}
+calculator::calculator()
+{
+	str2 = NULL;
+}
+void calculator::getdate()
+{
+	char *temp;
+	type = 0;
+	temp = date;
+	*temp = '\0';
+	while (isspace(*str2))
+	{
+		++str2;
+	}
+	if (strchr("+-*/^", *str2))
+	{
+		type = DELIMITER;
+		*temp++ = *str2++;
+	}
+	else if (isdigit(*str2))
+	{
+		type = NUMBER;
+		*temp++ = *str2++;
+	}
+	*temp = '\0';
+}
+double calculator::show(char *s)
+{
+	str2 = s;
+	double rezult;
+	getdate();
+	if (!*date)
+	{
+		error(1);
+		return 0.0;
+	}
+	count1(rezult);
+	if (*date)
+	{
+		error(0);
+	}
+	return rezult;
+}
+void calculator::error(int c)
+{
+	char e[2][100] = {
+	 "语法错误",
+	 "您没有输入任何的表达式！"
+	};
+	cout << "\n" << e[c];
+}
+void calculator::atom(double &rezult)
+{
+	switch (type)
+	{
+	case NUMBER:
+		rezult = atof(date);
+		getdate();
+		return;
+	default:
+		error(0);
+	}
+}
+void calculator::count1(double &rezult)
+{
+	char op;
+	double temp;
+	count2(rezult);
+	while ((op = *date) == '+' || op == '-')
+	{
+		getdate();
+		count2(temp);
+		switch (op)
+		{
+		case '+':rezult = rezult + temp; break;
+		case'-':rezult = rezult - temp; break;
+		}
+	}
+}
+void calculator::count2(double &rezult)
+{
+	double temp;
+	char op;
+	count3(rezult);
+	while ((op = *date) == '*' || op == '/')
+	{
+		getdate();
+		count3(temp);
+		switch (op)
+		{
+		case '*':rezult = rezult * temp; break;
+		case'/':rezult = rezult / temp; break;
+		}
+	}
+}
+void calculator::count3(double &rezult)
+{
+	char op, op1;
+	double temp, temp1;
+	atom(rezult);
+	if ((op = *date) == '^')
+	{
+		getdate();
+		if (type == DELIMITER)
+		{
+			getdate();
+			atom(temp);
+			temp = -temp;
+		}
+		else
+		{
+			atom(temp);
+		}
+		if (temp == 0)
+		{
+			rezult = 1;
+		}
+		else
+		{
+			rezult = pow(rezult, temp);
+		}
+	}
+}
+int main()
+{
+	char str5[10];
+	int a = 1;
+	content pp;
+	pp.display();
+	cout << endl;
+	char str1[80];
+	calculator ob;
+	for (; strcmp(str5, "exit") != 0;)
+	{
+		cout << "请选择你想执行的功能能: ";
+		cin >> a;
+		if (a == 1)
+		{
+			for (;;)
+			{
+				cout << "\n请输入计算表达式: ";
+				cin >> str1;
+				if (strcmp(str1, "baibai") == 0)
+				{
+					system("cls");
+					pp.display();
+					break;
+				}
+				cout << "\n\n" << "计算的结果是：" << ob.show(str1) << "\n\n";
+				system("pause");
+				system("cls");
+				pp.display();
+				cout << "退出计算,计算表达式请输入baibai\n";
+			}
+		}
+		if (a == 2)
+		{
+			int flag = 1;
+			for (; flag != 0;)
+			{
+				cout << "请选择 1十进制转换二进制 2 二进制转换成十进制: ";
+				int a, p;
+				cin >> a;
+				if (a == 1)
+				{
+					cout << "\n\n请输入你象处理的数据: ";
+					cin >> p;
+					thansform os(p);
+					os.Gets();
+				}
+				if (a == 2)
+				{
+					char str4[100];
+					cout << "\n请输入二进制数: ";
+					cin >> str4;
+					thansform1 os1(str4);
+					os1.Get1();
+				}
+				cout << "\n退出进制转换操作操作请输入0:  ";
+				cin >> flag;
+			}
+		}
+		if (a == 3)
+		{
+			int flag1 = 1;
+			for (; flag1 != 0;)
+			{
+				cout << "\n请输入三角函数类型1 sin 2cos与数据: ";
+				double b, c;
+				cin >> b >> c;
+				sanjiao s(c);
+				if (b == 1)
+				{
+					s.Get3();
+				}
+				if (b == 2)
+				{
+					s.Get4();
+				}
+				cout << "\n\n退出三角函数运算请输入0: 否则继续";
+				cin >> flag1;
+			}
+		}
+		cout << "退出总程序请输入exit,否则输入其他";
+		cin >> str5;
+		system("cls");
+		pp.display();
+	}
+	system("pause");
+	return 0;
+}
+
